@@ -1,70 +1,77 @@
-# Getting Started with Create React App
+# Poké Birthday
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A small React app that maps a date to a Pokémon by converting the date into an ID (month * 100 + day) and querying the PokéAPI. For example: Jan 1 → 101, Aug 31 → 831.
 
-## Available Scripts
+This project is a lightweight single-page app (created with a standard React toolchain) and includes a small component `src/BirthdayPokemon.jsx` that handles the date input, ID computation, and fetch to the PokéAPI.
 
-In the project directory, you can run:
+## What it does
 
-### `npm start`
+- Prefills the date input with today’s date.
+- Converts the chosen date to an ID using `month * 100 + day`.
+- Fetches Pokémon data from the PokéAPI at `https://pokeapi.co/api/v2/pokemon/{id}` and displays the sprite and basic info.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+Key implementation detail: the component uses `String(...).padStart(2, '0')` for month/day so the date value is in `YYYY-MM-DD` format required by `<input type="date">`.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Files of interest
 
-### `npm test`
+- `src/BirthdayPokemon.jsx` — main component that computes the ID and performs the API request.
+- `src/App.js` — app bootstrap (renders the component).
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Requirements
 
-### `npm run build`
+- Node.js (recommended 14+ or current LTS)
+- npm (or yarn)
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Run locally
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+1. Install dependencies
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+```bash
+npm install
+```
 
-### `npm run eject`
+2. Start the dev server
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+```bash
+npm start
+```
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Open http://localhost:3000 in your browser (Create React App default). If your project uses a different dev server or port, follow the output from `npm start`.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+## Build and test
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+Build for production:
 
-## Learn More
+```bash
+npm run build
+```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+Run tests:
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+```bash
+npm test
+```
 
-### Code Splitting
+## Troubleshooting
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+- No Pokémon found for a date: The app maps date → ID and queries that ID on the PokéAPI. Many IDs above the current Pokémon count will return 404. If you try a date with a large ID (for example 12/31 → 1231), the API may return "Pokémon not found." The UI surfaces a friendly error message in that case.
+- API rate limits or downtime: PokéAPI is a free public API. If requests fail, check the API status or try again later.
+- polyfills: `String.prototype.padStart` is supported in modern browsers. If you must support very old browsers, add a small polyfill.
 
-### Analyzing the Bundle Size
+## Notes & next steps
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+- You can change the ID mapping function in `src/BirthdayPokemon.jsx` if you'd prefer a different mapping from date → Pokémon.
+- Consider caching successful lookups locally to avoid repeated API calls for the same date.
 
-### Making a Progressive Web App
+## License
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+This repository doesn't specify a license. Add one if you plan to publish the project.
 
-### Advanced Configuration
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+If you want, I can also:
 
-### Deployment
+- add a brief automated test that checks the ID computation for a few dates,
+- include a sample screenshot or demo gif in the README,
+- or add a small polyfill helper for `padStart` to the project.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
